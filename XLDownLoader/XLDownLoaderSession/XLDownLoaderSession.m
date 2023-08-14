@@ -89,18 +89,6 @@ didReceiveResponse:(NSURLResponse *)response
             [downloadTask.taskDelegate URLSession:session dataTask:dataTask didReceiveResponse:response completionHandler:completionHandler];
         }
     }
-//    //如果当前已经下载的文件长度等于0，那么就需要将总长度信息写入文件中
-//    NSInteger expected = response.expectedContentLength;
-//    expected = expected > 0 ? expected : 0;
-//
-////    NSString *totalSizeString = [NSString stringWithFormat:@"%ld",_expectedSize];
-//    self.expectedSize = expected;
-//
-//
-//    //收到响应
-//    self.expectedSizeBlock(expected);
-////    self.currentStatusBlock(DownloadStatusDownloading);
-//    completionHandler(NSURLSessionResponseAllow); //允许接受数据，之后的代理方法会被执行
 }
 
 /** 客户端已收到服务器返回的部分数据

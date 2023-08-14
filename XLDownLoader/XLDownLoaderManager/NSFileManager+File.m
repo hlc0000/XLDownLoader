@@ -53,9 +53,6 @@
     //获取下载后的文件名
     NSString *fileName =  DiskCacheFileNameForKey(urlString);
     //根据文件名拼接沙盒全路径
-//    [fileManager createDirectoryAtPath:testDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-    
-//    NSString *fileFullPath = [[NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES)lastObject]stringByAppendingPathComponent:fileName];
     NSString *fileFullPath = [[self getFolderPath]stringByAppendingPathComponent:fileName];
     
     if (![self fileExistsAtPath:fileFullPath]) {
