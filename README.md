@@ -14,8 +14,8 @@
    =============
    
    手动导入:
-   1.下载`DownLoader`文件夹内所有内容 
-   2.将内部`DownLoader`文件夹内的文件添加到你的工程
+   1.下载`XLDownLoader`文件夹内所有内容 
+   2.将内部`XLDownLoader`文件夹内的文件添加到你的工程
    3.#import "XLDownLoaderManager.h"
    
    如何使用:
