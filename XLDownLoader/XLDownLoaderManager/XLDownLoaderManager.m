@@ -89,52 +89,54 @@
 - (void)loadWithArray: (NSArray<id> *)array propertyName:(NSString *)propertyName
              progress:(nullable DownLoaderProgressBlock)progressBlock
             completed:(nonnull DownLoaderCompletionBlock)completedBlock{
-    if (array == nil || array.count == 0) {}
-    for (int index = 0; index < array.count; index++) {
-        XL_LOCK(_lock);
-        id object = array[index];
-        XLDownLoaderItem *item = [[XLDownLoaderItem alloc]initWithModel:object];
-        NSString *urlString = [self getValueOfProperty:object propertyName:propertyName];
-        if (![urlString isEqualToString:@""] && urlString != nil) {
-            NSString *fileFullPath = [self.fileManager getFileFullPath:urlString];
-            CGFloat receivedSize = [self.fileManager getReceivedFileSizeWithURLString:fileFullPath];
-            [item addWithURL:[NSURL URLWithString:urlString] receivedSize:receivedSize fileFullPath:fileFullPath];
-            item.expectedSize = 0;
-            item.receivedSize = receivedSize;
-            item.urlString = urlString;
-            item.progressBlock = progressBlock;
-            item.completedBlock = completedBlock;
-            item.model = object;
-            item.downloadStatus = DownloadStatusWaiting;
-            [self.downloadingQueue addObject:item];
-            [_queue addObject:item];
+    if (array != nil) {
+        for (int index = 0; index < array.count; index++) {
+            XL_LOCK(_lock);
+            id object = array[index];
+            XLDownLoaderItem *item = [[XLDownLoaderItem alloc]initWithModel:object];
+            NSString *urlString = [self getValueOfProperty:object propertyName:propertyName];
+            if (![urlString isEqualToString:@""] && urlString != nil) {
+                NSString *fileFullPath = [self.fileManager getFileFullPath:urlString];
+                CGFloat receivedSize = [self.fileManager getReceivedFileSizeWithURLString:fileFullPath];
+                [item addWithURL:[NSURL URLWithString:urlString] receivedSize:receivedSize fileFullPath:fileFullPath];
+                item.expectedSize = 0;
+                item.receivedSize = receivedSize;
+                item.urlString = urlString;
+                item.progressBlock = progressBlock;
+                item.completedBlock = completedBlock;
+                item.model = object;
+                item.downloadStatus = DownloadStatusWaiting;
+                [self.downloadingQueue addObject:item];
+                [_queue addObject:item];
+            }
+            XL_UNLOCK(_lock);
         }
-        XL_UNLOCK(_lock);
+        [self start];
     }
-    [self start];
 }
 
 - (void)loadWithItems:(NSArray<XLDownLoaderItem *>*)items
              progress:(nullable DownLoaderProgressBlock)progressBlock
             completed:(nonnull DownLoaderCompletionBlock)completedBlock {
-    if (items == nil || items.count == 0) {}
-    for (int index = 0; index < items.count; index++) {
-        XL_LOCK(_lock);
-        XLDownLoaderItem* item = items[index];
-        if (![item.urlString isEqualToString:@""] && item.urlString != nil) {
-            NSString *fileFullPath = [self.fileManager getFileFullPath:item.urlString];
-            CGFloat receivedSize = [self.fileManager getReceivedFileSizeWithURLString:fileFullPath];
-            [item addWithURL:[NSURL URLWithString:item.urlString] receivedSize:receivedSize fileFullPath:fileFullPath];
-            item.progressBlock = progressBlock;
-            item.completedBlock = completedBlock;
-            item.downloadStatus = DownloadStatusWaiting;
-            [self.downloadingQueue addObject:item];
-            [_queue addObject:item];
+    if (items != nil) {
+        for (int index = 0; index < items.count; index++) {
+            XL_LOCK(_lock);
+            XLDownLoaderItem* item = items[index];
+            if (![item.urlString isEqualToString:@""] && item.urlString != nil) {
+                NSString *fileFullPath = [self.fileManager getFileFullPath:item.urlString];
+                CGFloat receivedSize = [self.fileManager getReceivedFileSizeWithURLString:fileFullPath];
+                [item addWithURL:[NSURL URLWithString:item.urlString] receivedSize:receivedSize fileFullPath:fileFullPath];
+                item.progressBlock = progressBlock;
+                item.completedBlock = completedBlock;
+                item.downloadStatus = DownloadStatusWaiting;
+                [self.downloadingQueue addObject:item];
+                [_queue addObject:item];
+            }
+            XL_UNLOCK(_lock);
         }
-        XL_UNLOCK(_lock);
+        
+        [self start];
     }
-    
-    [self start];
 }
 
 - (void)setMaxConcurrentOperationCount:(NSInteger)maxConcurrentOperationCount {
